@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1619547451 source:c:\.jakob\fhtw\2_semester\algorithmen_und_datenstrukturen\treecheck\src\tree.cpp
+	"Tree.h"
+	<iostream>
+
+1619549911 c:\.jakob\fhtw\2_semester\algorithmen_und_datenstrukturen\treecheck\include\tree.h
+
+1619548348 source:c:\.jakob\fhtw\2_semester\algorithmen_und_datenstrukturen\treecheck\main.cpp
+	<iostream>
+	<string>
+	<fstream>
+	<windows.h>
+	"Tree.h"
+
