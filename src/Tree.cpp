@@ -1,8 +1,9 @@
 #include "Tree.h"
 #include <iostream>
+#include <windows.h>
 
 Tree::Tree(){
-    this->root = NULL;
+    this->setRoot(NULL);
     this->setMin(1000);
     this->setMax(-1000);
     this->setAverage(0);
@@ -12,6 +13,12 @@ Tree::Tree(){
 Tree::~Tree(){
 }
 
+void Tree::setRoot(Node* root){
+    this->root = root;
+}
+Tree::Node* Tree::getRoot() const{
+    return this->root;
+}
 void Tree::setMin(int minValue){
     this->minValue = minValue;
 }
@@ -62,7 +69,7 @@ void Tree::addNode(int value){
 
 void Tree::addNodePrivate(int value, Node* node){
     if(root == NULL){
-        root = createNode(value);
+        this->setRoot(createNode(value));
     }else if(value < node->value){
         if(node->left != NULL){
             //Recursively call function, to get node position
@@ -77,7 +84,9 @@ void Tree::addNodePrivate(int value, Node* node){
             node->right = createNode(value);
         }
     }else{
+        setColor(12);
         std::cout << "This tree only accepts unqiue values. [Error for value: " << value << "]" << std::endl;
+        setColor(7);
     }
 }
 
@@ -86,6 +95,8 @@ void Tree::printStats(){
 }
 
 void Tree::printStatsPrivate(Node* node){
+    int height = 0;
+
     if(this->root == NULL){
         return;
     }
@@ -95,7 +106,13 @@ void Tree::printStatsPrivate(Node* node){
     if(node->left != NULL){
         printStatsPrivate(node->left);
     }
-    //std::cout << node->value << ": " << getBalancePrivate(node) << std::endl;
+    int balance = getBalancePrivate(node, height);
+    std::cout << "bal("<< node->value << ") = " << balance;
+    if(std::abs(balance) > 1){
+        setColor(12); std::cout << " (AVL Violation!)" << std::endl; setColor(7);
+        this->setIsAVL(false);
+    }else
+        std::cout << std::endl;
 
     if(this->minValue > node->value)
         this->setMin(node->value);
@@ -106,34 +123,68 @@ void Tree::printStatsPrivate(Node* node){
 
     if(node == root){
         this->setAverage(this->getAverage() / this->getNodeCount());
+        std::string avl = this->getIsAVL() ? "yes" : "no";
+        std::cout << "--------------------------" << std::endl;
+        std::cout << "AVL: " << avl << std::endl;
         std::cout << "min: " << this->getMin() << ", ";
         std::cout << "max: " << this->getMax() << ", ";
         std::cout << "avg: " << this->getAverage() << std::endl;
     }
 }
 
-/*
-int Tree::getBalancePrivate(Node* node){
-    if(root == NULL){
-        return 0;
-    }
+int Tree::getBalancePrivate(Node* node, int &height){
+    int leftHeight = 0, rightHeight = 0;
 
-    if(node->left != NULL)
-        left = getBalancePrivate(node->left);
-    if(node->right != NULL)
-        right = getBalancePrivate(node->right);
-
-    if(left < right)
-        return left++;
-    else
-        return right++;
-}
-
-int Tree::getHeightPrivate(Node* node){
     if(node == NULL){
+        //Leaf node is reached
+        height = 0;
         return 0;
     }
+
+    //Calculate height of left and right subtrees of node
+    getBalancePrivate(node->left, leftHeight);
+    getBalancePrivate(node->right, rightHeight);
+
+    height = std::max(leftHeight, rightHeight) + 1;
+
+    //Return balance-factor of node
+    return rightHeight - leftHeight;
 }
-*/
+
+bool Tree::searchNode(Node* nodeSearch, Node* nodeSubtree){
+    bool isFound = true;
+
+    if(nodeSearch == NULL){
+        return false;
+    }
+
+    //Compare value of current node to searched node
+    if(nodeSubtree->value < nodeSearch->value){
+        if(nodeSearch->left != NULL){
+            isFound = searchNode(nodeSearch->left, nodeSubtree);
+        }else
+            isFound = false;
+    }else if(nodeSubtree->value > nodeSearch->value){
+        if(nodeSearch->right != NULL){
+            isFound = searchNode(nodeSearch->right, nodeSubtree);
+        }else
+            isFound = false;
+    }
+    return isFound;
+}
+
+bool Tree::searchSubtree(Node *nodeSearch, Node* nodeSubtree){
+    bool isFound = true;
+    if(!this->searchNode(nodeSearch, nodeSubtree))
+        return false;
+
+    return isFound;
+}
+
+void Tree::setColor(int i){
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), i);
+}
+
+
 
 

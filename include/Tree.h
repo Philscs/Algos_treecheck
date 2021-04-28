@@ -15,6 +15,25 @@ class Tree
         float average;
         bool isAVL;
 
+        void incrementNodeCount();
+        void addNodePrivate(int value, Node* node);
+        void printStatsPrivate(Node* node);
+        int getBalancePrivate(Node* node, int &height);
+
+        void setColor(int i);
+
+    public:
+        Tree();
+        ~Tree();
+
+        Node* createNode(int value);
+        void addNode(int value);
+        void printStats();
+        bool searchNode(Node* nodeSearch, Node* nodeSubtree);
+        bool searchSubtree(Node *nodeSearch, Node* nodeSubtree);
+
+        void setRoot(Node* root);
+        Node* getRoot() const;
         void setMin(int minValue);
         int getMin() const;
         void setMax(int maxValue);
@@ -25,23 +44,6 @@ class Tree
         float getAverage() const;
         void setIsAVL(bool value);
         bool getIsAVL() const;
-
-        void incrementNodeCount();
-
-        void addNodePrivate(int value, Node* node);
-        void printStatsPrivate(Node* node);
-        int getBalancePrivate(Node* node);
-        int getHeightPrivate(Node* node);
-
-    public:
-        Tree();
-        ~Tree();
-
-        int left = 0, right = 0;
-
-        Node* createNode(int value);
-        void addNode(int value);
-        void printStats();
 };
 
 #endif // TREE_H
