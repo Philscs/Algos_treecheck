@@ -11,6 +11,7 @@ int main(int argc, char *argv[]){
     Tree bst;
     Tree subtree;
 
+    std::cout << std::endl;
     //Missing argument for filename
     if(argc <= 1 || argc >= 4){
         setColor(12); std::cout << "Required format: treecheck [tree] OR treecheck [searchtree] [subtree]" << std::endl; setColor(7);
@@ -48,13 +49,28 @@ int main(int argc, char *argv[]){
 
         if(counter == 1){
             //Search for one single node
-            std::cout << bst.searchNode(bst.getRoot(), subtree.getRoot());
+            std::cout << "--------------------------" << std::endl;
+            std::cout << "Searching " << subtree.getRoot()->value << ": ";
+            if(bst.searchNode(bst.getRoot(), subtree.getRoot())){
+                setColor(10); std::cout << "found"; setColor(7);
+            }else{
+                setColor(12); std::cout << "not found"; setColor(7);
+            }
         }else{
             //Search for subtree
-
+            std::cout << "--------------------------" << std::endl;
+            std::cout << "Searching subtree: ";
+            if(bst.searchSubtree(bst.getRoot(), subtree.getRoot())){
+                setColor(10); std::cout << "Subtree found"; setColor(7);
+            }else{
+                setColor(12); std::cout << "Subtree not found"; setColor(7);
+            }
         }
 
     }
+
+    std::cout << std::endl;
+
     return 0;
 }
 
